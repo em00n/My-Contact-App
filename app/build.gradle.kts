@@ -40,6 +40,9 @@ android {
     }
 }
 
+// Access base URL from gradle.properties
+val BASE_URL: String by project
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.12.0")
