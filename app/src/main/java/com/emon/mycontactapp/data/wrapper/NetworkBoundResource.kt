@@ -22,8 +22,9 @@ class NetworkBoundResource @Inject constructor() {
     suspend fun <ResultType> downloadData(api: suspend () -> Response<ResultType>): Flow<Result<ResultType>> {
         return withContext(ioDispatcher) {
             flow {
-                emit(Result.Loading)
+                emit(Result.Loading(true))
                 val response: Response<ResultType> = api()
+                emit(Result.Loading(false))
                 if (response.isSuccessful) {
                     response.body()?.let {
                         emit(Result.Success(data = it))
@@ -38,6 +39,7 @@ class NetworkBoundResource @Inject constructor() {
                 }
             }.catch { error ->
                 Timber.e(error.localizedMessage)
+                emit(Result.Loading(false))
                 emit(Result.Error(message = getErrorMessage(error), code = getErrorCode(error)))
             }
         }
