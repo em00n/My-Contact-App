@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.ContactListFragment">
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/titleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:lineSpacingExtra="5sp"
+        android:text="@string/my_contacts"
+        android:fontFamily="@font/sf_pro_text_semi_bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/contactSearchView"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_31sdp"
+        android:layout_marginHorizontal="@dimen/_17sdp"
+        android:layout_marginTop="@dimen/_17sdp"
+        android:textSize="@dimen/_13ssp"
+        android:theme="@style/Theme.MyContactApp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTV" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/contactListRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingHorizontal="@dimen/_13sdp"
+        android:paddingTop="@dimen/_13sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contactSearchView"
+        tools:listitem="@layout/item_contact_list" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

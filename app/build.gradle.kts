@@ -92,4 +92,10 @@ dependencies {
 
     //circleImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    implementation("com.intuit.sdp:sdp-android:1.1.0")
+    implementation("com.intuit.ssp:ssp-android:1.1.0")
+
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+
 }

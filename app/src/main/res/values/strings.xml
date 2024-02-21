@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">My Contact App</string>
     <string name="message_app_exit">Please tap the back button twice to exit the app.</string>
+    <string name="my_contacts">My Contacts</string>
+    <string name="back_button">Back Button</string>
+    <string name="call">Call</string>
+    <string name="message">Message</string>
+    <string name="email">Email</string>
 </resources>
