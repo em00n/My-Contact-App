@@ -7,5 +7,5 @@ import de.hdodenhof.circleimageview.CircleImageView
 fun CircleImageView.loadImage(url : String) {
     Glide.with(this.context)
         .load(url)
-        .into(this);
+        .into(this)
 }

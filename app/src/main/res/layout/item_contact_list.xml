@@ -7,8 +7,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/contactProfileIV"
-        android:layout_width="@dimen/_38sdp"
-        android:layout_height="@dimen/_38sdp"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"
         android:layout_marginVertical="@dimen/_8sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,9 +20,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_6sdp"
+        android:fontFamily="@font/roboto_regular"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
-        android:fontFamily="@font/roboto_regular"
         app:layout_constraintBottom_toTopOf="@id/mobileNumberTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contactProfileIV"
@@ -35,21 +35,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_6sdp"
+        android:fontFamily="@font/roboto_regular"
         android:textColor="@color/pantone_cool_gray"
         android:textSize="@dimen/_11ssp"
-        android:fontFamily="@font/roboto_regular"
         app:layout_constraintBottom_toBottomOf="@id/contactProfileIV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/contactProfileIV"
         app:layout_constraintTop_toBottomOf="@+id/nameTV"
         tools:text="(+880)" />
-    
+
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="@color/silver"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@id/nameTV"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/nameTV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

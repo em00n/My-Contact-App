@@ -3,6 +3,7 @@ package com.emon.mycontactapp.di.module
 import com.emon.mycontactapp.data.remote.ApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.emon.mycontactapp.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    val BASE_URL = "https://dev.gozayaan.com/"
+    val BASE_URL = BuildConfig.BASE_URL
 
     @Provides
     fun provideBaseUrl() = BASE_URL

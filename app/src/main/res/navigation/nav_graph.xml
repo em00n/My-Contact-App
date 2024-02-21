@@ -22,8 +22,7 @@
         tools:layout="@layout/fragment_contact_details">
         <argument
             android:name="contact"
-            android:defaultValue=""
-            app:argType="string"/>
+            app:argType="com.emon.mycontactapp.model.ContactListResult"/>
     </fragment>
 
 </navigation>

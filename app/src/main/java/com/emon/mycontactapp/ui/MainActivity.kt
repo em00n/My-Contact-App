@@ -15,8 +15,5 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private lateinit var navController: NavController
     override fun initializeView(savedInstanceState: Bundle?) {
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostContainerView) as NavHostFragment
-        navController = navHostFragment.navController
-
     }
 }

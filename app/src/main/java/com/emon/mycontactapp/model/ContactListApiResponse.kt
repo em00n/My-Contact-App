@@ -1,5 +1,7 @@
 package com.emon.mycontactapp.model
 
+import java.io.Serializable
+
 data class ContactListApiResponse(
     val error: Error,
     val result: List<ContactListResult>,
@@ -16,4 +18,4 @@ data class ContactListResult(
     val full_name: String,
     val image: String,
     val phone_number: String
-)
+): Serializable

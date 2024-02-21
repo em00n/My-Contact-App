@@ -24,12 +24,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            isDebuggable = true
+            buildConfigField("String", "BASE_URL", "\"https://dev.gozayaan.com/\"")
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            buildConfigField("String", "BASE_URL", "\"https://dev.gozayaan.com/\"")
         }
     }
     compileOptions {
@@ -39,13 +46,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
-
-// Access base URL from gradle.properties
-val BASE_URL: String by project
 
 dependencies {
 
@@ -96,6 +102,6 @@ dependencies {
     implementation("com.intuit.sdp:sdp-android:1.1.0")
     implementation("com.intuit.ssp:ssp-android:1.1.0")
 
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
 }
