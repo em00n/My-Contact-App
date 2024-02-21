@@ -9,7 +9,9 @@ import com.emon.mycontactapp.model.ContactListResult
 import com.emon.mycontactapp.utils.loadImage
 
 
-class ContactListAdapter() : BaseListAdapter<ContactListResult, ItemContactListBinding>(
+class ContactListAdapter(
+    private val onContactClick: (contact: ContactListResult) -> Unit
+) : BaseListAdapter<ContactListResult, ItemContactListBinding>(
     diffCallback = object : DiffUtil.ItemCallback<ContactListResult>() {
         override fun areItemsTheSame(
             oldBiddingItem: ContactListResult,
@@ -26,7 +28,6 @@ class ContactListAdapter() : BaseListAdapter<ContactListResult, ItemContactListB
         }
     }
 ) {
-
     override fun createBinding(parent: ViewGroup): ItemContactListBinding =
         ItemContactListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
@@ -35,5 +36,8 @@ class ContactListAdapter() : BaseListAdapter<ContactListResult, ItemContactListB
         binding.nameTV.text = item.full_name
         binding.mobileNumberTV.text = item.phone_number
 
+        binding.root.setOnClickListener {
+            onContactClick.invoke(item)
+        }
     }
 }
