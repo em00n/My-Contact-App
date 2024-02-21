@@ -24,7 +24,7 @@
     <androidx.appcompat.widget.SearchView
         android:id="@+id/contactSearchView"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_31sdp"
+        android:layout_height="@dimen/_30sdp"
         android:layout_marginHorizontal="@dimen/_17sdp"
         android:layout_marginTop="@dimen/_17sdp"
         android:textSize="@dimen/_13ssp"
@@ -44,5 +44,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/contactSearchView"
         tools:listitem="@layout/item_contact_list" />
+
+    <include
+        android:id="@+id/incError"
+        layout="@layout/include_error_screen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/incLoading"
+        layout="@layout/include_loading_screen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

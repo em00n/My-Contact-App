@@ -62,7 +62,7 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(loggerInterceptor: HttpLoggingInterceptor): OkHttpClient {
-        val timeOut = 60
+        val timeOut = 30
         val httpClient = OkHttpClient().newBuilder()
             .connectTimeout(timeOut.toLong(), TimeUnit.SECONDS)
             .readTimeout(timeOut.toLong(), TimeUnit.SECONDS)

@@ -3,6 +3,7 @@ package com.emon.mycontactapp.ui
 import android.os.Bundle
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.emon.mycontactapp.R
 import com.emon.mycontactapp.base.BaseFragment
@@ -31,13 +32,21 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val callback = requireActivity().onBackPressedDispatcher.addCallback {
 
-            if (isDoubleBackPressToExit) {
-                requireActivity().finish()
-                return@addCallback
-            }
+        setupOnBackPressed()
+    }
 
+    private fun setupOnBackPressed() {
+        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            handleBackPressed()
+        }
+        callback.isEnabled = true
+    }
+
+    private fun handleBackPressed() {
+        if (isDoubleBackPressToExit) {
+            requireActivity().finish()
+        } else {
             isDoubleBackPressToExit = true
             showToastMessage(getString(R.string.message_app_exit))
 
@@ -46,7 +55,6 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding>() {
                 isDoubleBackPressToExit = false
             }
         }
-        callback.isEnabled = true
     }
 
     override fun initializeView(savedInstanceState: Bundle?) {
@@ -93,13 +101,24 @@ class ContactListFragment : BaseFragment<FragmentContactListBinding>() {
     private fun handleUiState(state: ContactListUiState<Any>) {
 
         when (state) {
-            is ContactListUiState.Loading -> {}
+            is ContactListUiState.Loading -> {
+                binding.incLoading.root.isVisible = state.isLoading
+            }
+
             is ContactListUiState.ContactListApiSuccess -> {
+                binding.incError.root.isVisible = false
+
                 contactList = state.data
                 if (contactQueryText.isEmpty()) adapter.submitList(contactList)
             }
 
-            is ContactListUiState.ApiError -> {}
+            is ContactListUiState.ApiError -> {
+                binding.incError.root.isVisible = true
+                binding.incError.errorMessageTV.text = state.message
+                binding.incError.tryAgainBtn.setOnClickListener {
+                    viewModel.action(ContactListUiAction.FetchContactListApi)
+                }
+            }
         }
     }
 }
