@@ -3,5 +3,17 @@
     <style name="Base.Theme.MyContactApp" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="searchViewStyle">@style/CustomSearchView</item>
+    </style>
+
+    <style name="Theme.MyContactApp" parent="Base.Theme.MyContactApp" />
+
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_search</item>
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="queryHint">"Search"</item>
+        <item name="iconifiedByDefault">false</item>
+        <item name="android:textColorHint">@color/pantone_cool_gray</item>
+        <item name="android:background">@drawable/search_bg</item>
     </style>
 </resources>
