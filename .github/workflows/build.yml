@@ -38,11 +38,12 @@ jobs:
       #Build APK with Gradle (signing via command-line parameters)
       - name: Build with Gradle
         env:
+          KEYSTORE_PATH: app/my-release-key.jks  # Keystore file path
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=app/my-release-key.jks \
+          ./gradlew assembleRelease -Pandroid.injected.signing.store.file=$KEYSTORE_PATH \
             -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD \
             -Pandroid.injected.signing.key.alias=$KEY_ALIAS \
             -Pandroid.injected.signing.key.password=$KEY_PASSWORD
