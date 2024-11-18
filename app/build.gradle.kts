@@ -1,3 +1,5 @@
+import io.grpc.internal.SharedResourceHolder.release
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -23,6 +25,14 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("signingKey") {
+            storeFile = file(System.getenv("KEYSTORE_PATH")?:"my-release-key.jks")
+            storePassword = System.getenv("KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("KEY_ALIAS")
+            keyPassword = System.getenv("KEY_PASSWORD")
+        }
+    }
     buildTypes {
         debug {
             isDebuggable = true
@@ -37,6 +47,7 @@ android {
             )
 
             buildConfigField("String", "BASE_URL", "\"https://dev.gozayaan.com/\"")
+            signingConfig = signingConfigs.getByName("signingKey")
         }
     }
     compileOptions {
