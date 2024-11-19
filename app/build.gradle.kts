@@ -117,4 +117,7 @@ dependencies {
     //lottie
     implementation ("com.airbnb.android:lottie:6.1.0")
 
+    //Unit test
+    testImplementation("io.mockk:mockk:1.13.13")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }
