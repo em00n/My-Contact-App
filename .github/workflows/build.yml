@@ -49,6 +49,10 @@ jobs:
       - name: Clean the build
         run: ./gradlew clean
 
+      #Run unit tests
+      - name: Run unit tests
+        run: ./gradlew test --no-daemon
+
       #Build APK with Gradle (signing via command-line parameters)
       - name: Build with Gradle
         run: ./gradlew assembleRelease
