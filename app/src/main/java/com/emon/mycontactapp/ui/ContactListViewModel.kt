@@ -29,11 +29,11 @@ class ContactListViewModel @Inject constructor(
                 when (result) {
                     is Result.Loading -> _uiState.value = ContactListUiState.Loading(result.loading)
                     is Result.Success -> {
-                        result.data.error.code?.let {
+                        result.data.error?.code?.let {
                             _uiState.value = ContactListUiState.ApiError(result.data.error.message?:"")
                             return@collect
                         }
-                        _uiState.value = ContactListUiState.ContactListApiSuccess(result.data.result)
+                        _uiState.value = ContactListUiState.ContactListApiSuccess(result.data.result as List<ContactListResult>)
                     }
                     is Result.Error -> _uiState.value = ContactListUiState.ApiError(result.message)
                 }

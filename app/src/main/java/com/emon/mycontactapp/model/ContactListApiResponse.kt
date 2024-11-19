@@ -3,8 +3,8 @@ package com.emon.mycontactapp.model
 import java.io.Serializable
 
 data class ContactListApiResponse(
-    val error: Error,
-    val result: List<ContactListResult>,
+    val error: Error?=null,
+    val result: List<ContactListResult>?= listOf(),
     val status: Boolean
 )
 
