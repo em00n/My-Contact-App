@@ -7,6 +7,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -116,6 +117,9 @@ dependencies {
 
     //lottie
     implementation ("com.airbnb.android:lottie:6.1.0")
+
+    //Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
 
     //Unit test
     testImplementation("io.mockk:mockk:1.13.13")
