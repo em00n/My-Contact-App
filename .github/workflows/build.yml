@@ -62,9 +62,25 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
-      # Step 7: Upload APK as an artifact
+      #Upload APK as an artifact
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release.apk
           path: app/build/outputs/apk/release/app-release.apk
+
+      #Decode and save Firebase credentials
+      - name: Decode and save Firebase credentials
+        env:
+          CREDENTIAL_FILE_CONTENT: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+        run: |
+          echo "$CREDENTIAL_FILE_CONTENT" | base64 --decode > firebase-credentials.json
+
+      #Upload artifact to Firebase App Distribution
+      - name: Upload Apk to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v4
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFile: firebase-credentials.json
+          groups: testers
+          file: app/build/outputs/apk/release/app-release.apk
