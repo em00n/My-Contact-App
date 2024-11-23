@@ -1,4 +1,4 @@
-name: Build and Sign APK
+name: Build Sign APK And Upload To Firebase App Distribution
 
 on:
   push:
