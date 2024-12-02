@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.emon.mycontactapp.base.BaseListAdapter
 import com.emon.mycontactapp.databinding.ItemContactListBinding
 import com.emon.mycontactapp.model.ContactListResult
-import com.emon.mycontactapp.utils.loadImage
+import com.emon.mycontactapp.utils.loadImageWithoutCache
 
 
 class ContactListAdapter(
@@ -32,7 +32,7 @@ class ContactListAdapter(
         ItemContactListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
     override fun bind(binding: ItemContactListBinding, item: ContactListResult, position: Int) {
-        binding.contactProfileIV.loadImage(item.image)
+        binding.contactProfileIV.loadImageWithoutCache(item.image)
         binding.nameTV.text = item.full_name
         binding.mobileNumberTV.text = item.phone_number
 

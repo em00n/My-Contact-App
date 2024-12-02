@@ -14,7 +14,7 @@ fun CircleImageView.loadImage(url : String) {
         .clearOnDetach()
 }
 
-fun CircleImageView.loadWithoutCache(url: String) {
+fun CircleImageView.loadImageWithoutCache(url: String) {
     val request = ImageRequest.Builder(context)
         .data(url)
         .diskCachePolicy(CachePolicy.DISABLED) // Disable disk caching
