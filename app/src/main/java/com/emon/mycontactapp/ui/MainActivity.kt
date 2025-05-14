@@ -2,8 +2,6 @@ package com.emon.mycontactapp.ui
 
 import android.os.Bundle
 import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.emon.mycontactapp.R
 import com.emon.mycontactapp.base.BaseActivity
 import com.emon.mycontactapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint

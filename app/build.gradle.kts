@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.emon.mycontactapp"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -65,10 +65,10 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -91,15 +91,15 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:${okHttp}")
 
     //gson
-    val gson = "2.10.1"
+    val gson = "2.11.0"
     implementation("com.google.code.gson:gson:${gson}")
 
     //lifecycle
-    val lifecycleVersion = "2.8.7"
+    val lifecycleVersion = "2.9.0"
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
 
     // Navigation
-    val navVersion = "2.8.4"
+    val navVersion = "2.9.0"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
@@ -122,7 +122,7 @@ dependencies {
     implementation ("com.airbnb.android:lottie:6.1.0")
 
     //Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
 
     //Unit test
     testImplementation("io.mockk:mockk:1.13.13")
