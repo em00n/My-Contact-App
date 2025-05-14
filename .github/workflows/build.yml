@@ -3,10 +3,10 @@ name: Build Sign APK And Upload To Firebase App Distribution
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       #Decode And Save JKS File From Base64
       - name: Decode And Save JKS File
