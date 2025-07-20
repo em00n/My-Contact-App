@@ -1,11 +1,11 @@
 package com.emon.mycontactapp.di.module
 
 import android.content.Context
-import com.emon.mycontactapp.data.remote.ApiService
+import com.emon.mycontactapp.data.remote.api.ApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.emon.mycontactapp.BuildConfig
-import com.emon.mycontactapp.data.remote.MockResponseInterceptor
+import com.emon.mycontactapp.data.remote.interceptor.MockResponseInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 

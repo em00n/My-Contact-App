@@ -1,5 +1,4 @@
 {
-  "error": null,
   "result": [
     {
       "email": "john.doe1@example.com",
@@ -121,6 +120,5 @@
       "image": "https://picsum.photos/200",
       "phone_number": "+12345678920"
     }
-  ],
-  "status": true
+  ]
 }

@@ -1,7 +1,7 @@
 package com.emon.mycontactapp.di.module
 
-import com.emon.mycontactapp.data.remote.ContactListRepoImpl
-import com.emon.mycontactapp.data.repository.ContactListRepository
+import com.emon.mycontactapp.data.repository.ContactListRepositoryImpl
+import com.emon.mycontactapp.domain.repository.ContactListRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 interface RepositoryModule {
 
     @Binds
-    fun bindContactListRepository(contactListRepoImpl: ContactListRepoImpl): ContactListRepository
+    fun bindContactListRepository(contactListRepoImpl: ContactListRepositoryImpl): ContactListRepository
 }

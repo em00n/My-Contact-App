@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:paddingHorizontal="@dimen/_13sdp"
-    tools:context=".ui.ContactDetailsFragment">
+    tools:context=".presentation.contactdetails.ContactDetailsFragment">
 
     <ImageView
         android:id="@+id/backIV"
