@@ -1,13 +1,12 @@
 package com.emon.mycontactapp
 
-import com.emon.mycontactapp.data.repository.ContactListRepository
-import com.emon.mycontactapp.model.ContactListApiResponse
-import com.emon.mycontactapp.model.ContactListResult
-import com.emon.mycontactapp.model.Error
-import com.emon.mycontactapp.ui.ContactListUiAction
-import com.emon.mycontactapp.ui.ContactListUiState
-import com.emon.mycontactapp.ui.ContactListViewModel
-import com.emon.mycontactapp.utils.Result
+import com.emon.mycontactapp.core.utils.Resource
+import com.emon.mycontactapp.domain.model.Contact
+import com.emon.mycontactapp.domain.model.ContactList
+import com.emon.mycontactapp.domain.usecase.GetContactListUseCase
+import com.emon.mycontactapp.presentation.contactlist.ContactListUiAction
+import com.emon.mycontactapp.presentation.contactlist.ContactListUiState
+import com.emon.mycontactapp.presentation.contactlist.ContactListViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -28,14 +27,14 @@ import org.junit.Test
 class ContactListViewModelTest {
 
     // Mocks
-    private lateinit var contactListRepository: ContactListRepository
+    private lateinit var getContactListUseCase: GetContactListUseCase
     private lateinit var viewModel: ContactListViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher()) // Set the main dispatcher for tests
-        contactListRepository = mockk()
-        viewModel = ContactListViewModel(contactListRepository)
+        getContactListUseCase = mockk()
+        viewModel = ContactListViewModel(getContactListUseCase)
     }
 
     @After
@@ -46,7 +45,7 @@ class ContactListViewModelTest {
     @Test
     fun fetchContactListApiLoading() = runTest {
         // Mock loading state
-        coEvery { contactListRepository.fetchContactList() } returns flowOf(Result.Loading(true))
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Loading(true))
 
         // Trigger action
         viewModel.action(ContactListUiAction.FetchContactListApi)
@@ -63,15 +62,13 @@ class ContactListViewModelTest {
     @Test
     fun fetchContactListApiSuccess() = runTest {
         // Mock repository success response
-        //val mockResult = mockk<ContactListApiResponse>(relaxed = true)
-        val mockResult = listOf<ContactListResult>()
-        val mockResponse = ContactListApiResponse(
-            error = null, // Ensure no error
-            result = mockResult,
-            status = true // Indicates success
+        val mockResult = listOf(mockk<Contact>(relaxed = true))
+        //val mockResult = listOf<Contact>()
+        val mockResponse = ContactList(
+            result = mockResult
         )
-        coEvery { contactListRepository.fetchContactList() } returns flowOf(
-            Result.Success(
+        coEvery { getContactListUseCase.invoke() } returns flowOf(
+            Resource.Success(
                 mockResponse
             )
         )
@@ -92,8 +89,8 @@ class ContactListViewModelTest {
     @Test
     fun fetchContactListApiError() = runTest {
         // Mock repository error response
-        coEvery { contactListRepository.fetchContactList() } returns flowOf(
-            Result.Error(
+        coEvery { getContactListUseCase.invoke() } returns flowOf(
+            Resource.Error(
                 message = "Error",
                 code = 400
             )
@@ -112,32 +109,51 @@ class ContactListViewModelTest {
     }
 
     @Test
-    fun fetchContactListApiErrorInResponse() = runTest {
-        // Mock repository error response
-        val mockResult = mockk<List<ContactListResult>>(relaxed = true)
-        val mockResponse = ContactListApiResponse(
-            error = Error(500, "Error"), // Ensure error
-            result = mockResult,
-            status = false // Indicates error
-        )
-        coEvery { contactListRepository.fetchContactList() } returns flowOf(
-            Result.Success(
-                mockResponse
-            )
-        )
+    fun fetchContactListEmptyList() = runTest {
+        // Mock repository success response with empty list
+        val mockResponse = ContactList(result = emptyList())
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Success(mockResponse))
 
         // Trigger action
         viewModel.action(ContactListUiAction.FetchContactListApi)
+        advanceUntilIdle()
 
-        // Simulate coroutine execution
-        advanceUntilIdle() // Completes all pending coroutines
-
-        // Verify Api Error in response
+        // Verify Api Success with empty list
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ApiError)
-        assertEquals("Error", (state as ContactListUiState.ApiError).message)
+        assertTrue(state is ContactListUiState.ContactListApiSuccess)
+        assertTrue((state as ContactListUiState.ContactListApiSuccess).data.isEmpty())
     }
 
+    @Test
+    fun fetchContactListUnexpectedException() = runTest {
+        // Mock repository throws exception
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Error(message = "Unexpected error", code = 404))
+
+        // Trigger action
+        viewModel.action(ContactListUiAction.FetchContactListApi)
+        advanceUntilIdle()
+
+        // Verify Api Error
+        val state = viewModel.uiState.value
+        assertTrue(state is ContactListUiState.ApiError)
+        assertEquals("Unexpected error", (state as ContactListUiState.ApiError).message)
+    }
+
+    @Test
+    fun repeatedFetchContactListStateConsistency() = runTest {
+        // Mock repository success response
+        val mockResult = listOf(mockk<Contact>(relaxed = true))
+        val mockResponse = ContactList(result = mockResult)
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Success(mockResponse))
+
+        // Trigger action multiple times
+        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContactListApi)
+        advanceUntilIdle()
+
+        // Verify state is still success and data is correct
+        val state = viewModel.uiState.value
+        assertTrue(state is ContactListUiState.ContactListApiSuccess)
+        assertEquals(mockResult, (state as ContactListUiState.ContactListApiSuccess).data)
+    }
 }
-
-
