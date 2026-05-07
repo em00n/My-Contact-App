@@ -48,7 +48,7 @@ class ContactListViewModelTest {
         coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Loading(true))
 
         // Trigger action
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
 
         // Simulate coroutine execution
         advanceUntilIdle() // Completes all pending coroutines
@@ -56,7 +56,6 @@ class ContactListViewModelTest {
         // Verify loading state
         val state = viewModel.uiState.value
         assertTrue(state is ContactListUiState.Loading)
-        assertTrue((state as ContactListUiState.Loading).isLoading)
     }
 
     @Test
@@ -74,15 +73,15 @@ class ContactListViewModelTest {
         )
 
         // Trigger action
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
 
         // Simulate coroutine execution
         advanceUntilIdle() // Completes all pending coroutines
 
         // Verify Api Success
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ContactListApiSuccess)
-        assertEquals(mockResult, (state as ContactListUiState.ContactListApiSuccess).data)
+        assertTrue(state is ContactListUiState.Success)
+        assertEquals(mockResult, (state as ContactListUiState.Success).contacts)
 
     }
 
@@ -97,15 +96,15 @@ class ContactListViewModelTest {
         )
 
         // Trigger action
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
 
         // Simulate coroutine execution
         advanceUntilIdle() // Completes all pending coroutines
 
         // Verify Api Error
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ApiError)
-        assertEquals("Error", (state as ContactListUiState.ApiError).message)
+        assertTrue(state is ContactListUiState.Error)
+        assertEquals("Error", (state as ContactListUiState.Error).message)
     }
 
     @Test
@@ -115,13 +114,13 @@ class ContactListViewModelTest {
         coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Success(mockResponse))
 
         // Trigger action
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
         advanceUntilIdle()
 
         // Verify Api Success with empty list
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ContactListApiSuccess)
-        assertTrue((state as ContactListUiState.ContactListApiSuccess).data.isEmpty())
+        assertTrue(state is ContactListUiState.Success)
+        assertTrue((state as ContactListUiState.Success).contacts.isEmpty())
     }
 
     @Test
@@ -130,13 +129,13 @@ class ContactListViewModelTest {
         coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Error(message = "Unexpected error", code = 404))
 
         // Trigger action
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
         advanceUntilIdle()
 
         // Verify Api Error
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ApiError)
-        assertEquals("Unexpected error", (state as ContactListUiState.ApiError).message)
+        assertTrue(state is ContactListUiState.Error)
+        assertEquals("Unexpected error", (state as ContactListUiState.Error).message)
     }
 
     @Test
@@ -147,13 +146,13 @@ class ContactListViewModelTest {
         coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Success(mockResponse))
 
         // Trigger action multiple times
-        viewModel.action(ContactListUiAction.FetchContactListApi)
-        viewModel.action(ContactListUiAction.FetchContactListApi)
+        viewModel.action(ContactListUiAction.FetchContacts)
+        viewModel.action(ContactListUiAction.FetchContacts)
         advanceUntilIdle()
 
         // Verify state is still success and data is correct
         val state = viewModel.uiState.value
-        assertTrue(state is ContactListUiState.ContactListApiSuccess)
-        assertEquals(mockResult, (state as ContactListUiState.ContactListApiSuccess).data)
+        assertTrue(state is ContactListUiState.Success)
+        assertEquals(mockResult, (state as ContactListUiState.Success).contacts)
     }
 }
