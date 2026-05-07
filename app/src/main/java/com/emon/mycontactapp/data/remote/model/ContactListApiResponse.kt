@@ -7,6 +7,7 @@ data class ContactListApiResponse(
 ): Serializable
 
 data class ContactListResult(
+    val id: Int?,
     val email: String?,
     val full_name: String?,
     val image: String?,

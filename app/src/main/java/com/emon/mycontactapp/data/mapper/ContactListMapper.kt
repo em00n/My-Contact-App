@@ -11,6 +11,7 @@ class ContactListMapper @Inject constructor() : Mapper<ContactListApiResponse, C
         return ContactList(
             result = type.result?.map {
                 Contact(
+                    id = it.id ?: 0,
                     email = it.email ?: "",
                     fullName = it.full_name ?: "",
                     imageUrl = it.image ?: "",

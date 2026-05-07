@@ -1,14 +1,18 @@
 package com.emon.mycontactapp.domain.model
 
-import java.io.Serializable
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ContactList(
     val result: List<Contact> = emptyList()
-): Serializable
+)
 
+@Serializable
 data class Contact(
+    val id: Int,
     val email: String,
     val fullName: String,
     val imageUrl: String,
     val phoneNumber: String
-): Serializable
+)
