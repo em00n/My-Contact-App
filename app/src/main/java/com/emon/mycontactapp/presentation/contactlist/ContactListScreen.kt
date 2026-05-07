@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +48,7 @@ import com.emon.mycontactapp.ui.theme.DarkGray
 import com.emon.mycontactapp.ui.theme.PantoneCoolGray
 import com.emon.mycontactapp.ui.theme.WhiteSmoke
 import com.emon.mycontactapp.R
+import com.emon.mycontactapp.ui.theme.MyContactAppTheme
 
 @Composable
 fun ContactListScreen(
@@ -323,3 +325,187 @@ fun ContactListItem(
     }
 }
 
+// Previews
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun ContactListContentLoadingPreview() {
+
+    MyContactAppTheme {
+        ContactListContent(
+            uiState = ContactListUiState.Loading,
+            onAction = {},
+            onContactClick = {}
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun ContactListContentSuccessPreview() {
+
+    val contacts = listOf(
+        Contact(
+            id = 1,
+            fullName = "John Doe",
+            email = "john@gmail.com",
+            phoneNumber = "+880123456789",
+            imageUrl = ""
+        ),
+        Contact(
+            id = 2,
+            fullName = "Emma Watson",
+            email = "emma@gmail.com",
+            phoneNumber = "+880987654321",
+            imageUrl = ""
+        )
+    )
+
+    MyContactAppTheme {
+        ContactListContent(
+            uiState = ContactListUiState.Success(
+                contacts = contacts,
+                searchQuery = ""
+            ),
+            onAction = {},
+            onContactClick = {}
+        )
+    }
+}
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun ContactListContentErrorPreview() {
+
+    MyContactAppTheme {
+        ContactListContent(
+            uiState = ContactListUiState.Error(
+                message = "Something went wrong"
+            ),
+            onAction = {},
+            onContactClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorContentPreview() {
+
+    MyContactAppTheme {
+        ErrorContent(
+            message = "Unable to fetch contacts",
+            onRetryClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SuccessContentPreview() {
+
+    val contacts = listOf(
+        Contact(
+            id = 1,
+            fullName = "John Doe",
+            email = "john@gmail.com",
+            phoneNumber = "+880123456789",
+            imageUrl = ""
+        ),
+        Contact(
+            id = 2,
+            fullName = "Emma Watson",
+            email = "emma@gmail.com",
+            phoneNumber = "+880987654321",
+            imageUrl = ""
+        )
+    )
+
+    MyContactAppTheme {
+        SuccessContent(
+            searchQuery = "",
+            contacts = contacts,
+            onSearchQueryChange = {},
+            onContactClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContactHeaderPreview() {
+
+    MyContactAppTheme {
+        ContactHeader()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContactSearchBarPreview() {
+
+    MyContactAppTheme {
+        ContactSearchBar(
+            searchQuery = "John",
+            onSearchQueryChange = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContactListPreview() {
+
+    val contacts = listOf(
+        Contact(
+            id = 1,
+            fullName = "John Doe",
+            email = "john@gmail.com",
+            phoneNumber = "+880123456789",
+            imageUrl = ""
+        ),
+        Contact(
+            id = 2,
+            fullName = "Emma Watson",
+            email = "emma@gmail.com",
+            phoneNumber = "+880987654321",
+            imageUrl = ""
+        )
+    )
+
+    MyContactAppTheme {
+        ContactList(
+            contacts = contacts,
+            onContactClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ContactListItemPreview() {
+
+    val contact = Contact(
+        id = 1,
+        fullName = "John Doe",
+        email = "john@gmail.com",
+        phoneNumber = "+880123456789",
+        imageUrl = ""
+    )
+
+    MyContactAppTheme {
+        ContactListItem(
+            contact = contact,
+            onContactClick = {}
+        )
+    }
+}

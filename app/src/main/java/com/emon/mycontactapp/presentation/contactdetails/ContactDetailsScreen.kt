@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -43,6 +45,7 @@ import com.emon.mycontactapp.presentation.contactlist.ContactListViewModel
 import com.emon.mycontactapp.ui.components.LoadingScreen
 import com.emon.mycontactapp.ui.theme.DarkGray
 import com.emon.mycontactapp.ui.theme.LightGray
+import com.emon.mycontactapp.ui.theme.MyContactAppTheme
 import com.emon.mycontactapp.ui.theme.White
 
 @Composable
@@ -197,3 +200,72 @@ fun ActionButton(
 }
 
 
+// Previews
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun LoadingContentPreview() {
+    MyContactAppTheme {
+        LoadingContent()
+    }
+}
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun ContactDetailsContentPreview() {
+
+    val mockContact = Contact(
+        id = 1,
+        fullName = "John Doe",
+        email = "john.doe@gmail.com",
+        phoneNumber = "+880123456789",
+        imageUrl = ""
+    )
+
+    MyContactAppTheme {
+        ContactDetailsContent(
+            contact = mockContact,
+            onBackClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ActionButtonPreview() {
+
+    MyContactAppTheme {
+        Row(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
+            ActionButton(
+                icon = Icons.Default.Call,
+                label = "Call",
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            ActionButton(
+                icon = Icons.Default.Message,
+                label = "Message",
+                modifier = Modifier.weight(1f)
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            ActionButton(
+                icon = Icons.Default.Email,
+                label = "Email",
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}

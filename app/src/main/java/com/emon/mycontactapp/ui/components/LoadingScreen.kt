@@ -9,12 +9,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.emon.mycontactapp.R
+import com.emon.mycontactapp.ui.theme.MyContactAppTheme
 
 @Composable
 fun LoadingScreen() {
@@ -37,5 +39,19 @@ fun LoadingScreen() {
             progress = { progress },
             modifier = Modifier.wrapContentSize()
         )
+    }
+}
+
+
+// Preview of the LoadingScreen composable
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun LoadingScreenPreview() {
+    MyContactAppTheme {
+        LoadingScreen()
     }
 }
