@@ -2,12 +2,11 @@ package com.emon.mycontactapp.data.common
 
 import com.emon.mycontactapp.core.utils.Resource
 import com.google.gson.JsonParser
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
@@ -17,46 +16,39 @@ import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 class NetworkBoundResource @Inject constructor() {
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    suspend fun <ResultType> performApiRequest(api: suspend () -> Response<ResultType>): Flow<Resource<ResultType>> {
-        return withContext(ioDispatcher) {
-            flow {
-                emit(Resource.Loading(true))
-                val response: Response<ResultType> = api()
-                emit(Resource.Loading(false))
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        emit(Resource.Success(data = it))
-                    } ?: emit(Resource.Error(message = "Unknown error occurred", code = 0))
-                } else {
-                    emit(
-                        Resource.Error(
-                            message = parseErrorBody(response.errorBody()),
-                            code = response.code()
-                        )
-                    )
-                }
-            }.catch { error ->
-                Timber.e(error.localizedMessage)
-                emit(Resource.Loading(false))
-                emit(Resource.Error(message = getErrorMessage(error), code = getErrorCode(error)))
-            }
+    fun <ResultType> performApiRequest(
+        api: suspend () -> Response<ResultType>
+    ): Flow<Resource<ResultType>> = flow {
+        emit(Resource.Loading)
+        val response: Response<ResultType> = api()
+        if (response.isSuccessful) {
+            response.body()?.let {
+                emit(Resource.Success(data = it))
+            } ?: emit(Resource.Error(message = "Unknown error occurred", code = 0))
+        } else {
+            emit(
+                Resource.Error(
+                    message = parseErrorBody(response.errorBody()),
+                    code = response.code()
+                )
+            )
         }
-    }
+    }.catch { error ->
+        Timber.e(error.localizedMessage)
+        emit(Resource.Error(message = getErrorMessage(error), code = getErrorCode(error)))
+    }.flowOn(Dispatchers.IO)
 
     private fun parseErrorBody(response: ResponseBody?): String {
         return response?.let {
             try {
-                val errorMessage =
-                    JsonParser.parseString(it.string()).asJsonObject["message"].asString
-                if (errorMessage.isNotEmpty()) {
-                    return@let errorMessage
-                }
+                val json = JsonParser.parseString(it.string()).asJsonObject
+                val message = json["message"]?.asString
+                if (!message.isNullOrEmpty()) return@let message
             } catch (e: Exception) {
                 Timber.e(e, "Error parsing error body")
             }
-            return@let "Whoops! Something went wrong. Please try again."
+            "Whoops! Something went wrong. Please try again."
         } ?: "Whoops! Unknown error occurred. Please try again."
     }
 
@@ -64,20 +56,7 @@ class NetworkBoundResource @Inject constructor() {
         return when (throwable) {
             is SocketTimeoutException -> "Whoops! Connection timed out. Please try again."
             is IOException -> "Whoops! No Internet Connection. Please try again."
-            is HttpException -> {
-                try {
-                    val errorBody = throwable.response()?.errorBody()?.string()
-                    val errorMessage =
-                        JsonParser.parseString(errorBody).asJsonObject["message"].asString
-                    if (errorMessage.isNotEmpty()) {
-                        return errorMessage
-                    }
-                } catch (e: Exception) {
-                    Timber.e(e, "Error parsing HTTP exception")
-                }
-                "Whoops! Something went wrong. Please try again."
-            }
-
+            is HttpException -> parseErrorBody(throwable.response()?.errorBody())
             else -> "Whoops! Unknown error occurred. Please try again."
         }
     }

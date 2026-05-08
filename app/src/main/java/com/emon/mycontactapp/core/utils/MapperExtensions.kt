@@ -8,7 +8,7 @@ fun <R, E> Flow<Resource<R>>.mapResponseWith(mapper: Mapper<R, E>): Flow<Resourc
         when (it) {
             is Resource.Success -> Resource.Success(mapper.mapFromApiResponse(it.data))
             is Resource.Error -> Resource.Error(it.message, it.code)
-            is Resource.Loading -> Resource.Loading(it.loading)
+            is Resource.Loading -> Resource.Loading
         }
     }
 }
