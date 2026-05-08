@@ -131,6 +131,50 @@ cd My-Contact-App
 > also uncomment `provideOkHttpClient` in `NetworkModule.kt`.
 ---
 
+## CI/CD
+
+This project uses **GitHub Actions** to automatically build, sign, test, and distribute the app on every push or pull request to `master`.
+
+### Pipeline Steps
+
+```
+Push / PR to master
+        ↓
+Checkout Code
+        ↓
+Setup JDK 21
+        ↓
+Decode Secrets (JKS, google-services.json, Firebase credentials)
+        ↓
+Cache Gradle Dependencies
+        ↓
+Run Unit Tests
+        ↓
+Build & Sign Release APK
+        ↓
+Upload APK as GitHub Artifact
+        ↓
+Upload to Firebase App Distribution
+```
+
+### Required GitHub Secrets
+
+Go to `Settings → Secrets and variables → Actions` and add:
+
+| Secret | Description |
+|---|---|
+| `JKS_BASE64` | Base64 encoded release keystore `.jks` file |
+| `KEYSTORE_PASSWORD` | Keystore password |
+| `KEY_ALIAS` | Key alias |
+| `KEY_PASSWORD` | Key password |
+| `GOOGLE_SERVICES_JSON` | Base64 encoded `google-services.json` |
+| `FIREBASE_APP_ID` | Firebase App ID from project settings |
+| `CREDENTIAL_FILE_CONTENT` | Base64 encoded Firebase service account credentials JSON |
+
+### Firebase App Distribution
+
+Signed APKs are automatically distributed to the **testers** group after every successful build. Testers receive an email notification with a download link.
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps:
