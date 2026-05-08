@@ -34,7 +34,7 @@ android {
     buildTypes {
         debug {
             isDebuggable = true
-            buildConfigField("String", "BASE_URL", "\"https://dev.gozayaan.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://dev.localhost.com/\"")
             enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
         }
@@ -46,7 +46,7 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField("String", "BASE_URL", "\"https://dev.gozayaan.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://prod.localhost.com/\"")
             signingConfig = signingConfigs.getByName("signingKey")
         }
     }
