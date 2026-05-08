@@ -1,15 +1,149 @@
+# Contacts App
 
-# My Contact App
-'My Contact App' – an Android app that fetches and displays a list of contacts from an API.
+A modern Android contacts app built with **Jetpack Compose**, **Clean Architecture**, and **MVVM + MVI** pattern.
 
-### Demo 📱
-<img src="/art/demo.gif" width=215>
+---
 
-## Built With 🛠
-- [Kotlin](https://kotlinlang.org/) - Official programming language for Android development.
-- [Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - For loading data asynchronously.
-- [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/) - A flow is conceptually a stream of data that can be computed asynchronously.
-- [Android Architecture Components](https://developer.android.com/topic/libraries/architecture) - Collection of libraries that help you design robust, testable, and maintainable apps.
-- [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) - Stores UI-related data that isn't destroyed on UI changes.
-- [Dagger Hilt](https://dagger.dev/hilt/) - Hilt is a dependency injection library for Android
-- [Retrofit](https://square.github.io/retrofit/) - A type-safe HTTP client for Android and Java.
+## Features
+
+- Browse contacts fetched from REST API
+- Real-time contact search by name
+- View detailed contact information
+- Material Design 3 UI
+- Splash Screen API (Android 12+)
+- Type-safe navigation with Compose Navigation
+
+---
+
+## Screenshots
+
+| Contact List | Contact Details |
+|-------------|-----------------|
+| ![list](art/contact_list.png) | ![details](art/contact_details.png) |
+---
+
+## Tech Stack
+
+| Category | Technology                             |
+|---|----------------------------------------|
+| UI | Jetpack Compose, Material Design 3     |
+| Architecture | MVVM, MVI, Clean Architecture          |
+| Dependency Injection | Hilt                                   |
+| Networking | Retrofit, OkHttp, Gson                 |
+| Image Loading | Coil                                   |
+| Async | Coroutines, Flow                       |
+| Navigation | Jetpack Navigation Compose (type-safe) |
+| Splash Screen | SplashScreen API                       |
+| Animation | Lottie                                 |
+| Language | Kotlin 2.0                             |
+
+---
+
+## Architecture
+
+This app follows **Clean Architecture** with **MVI-style** presentation layer across three distinct layers:
+
+```
+┌───────────────────────────────────┐
+│        Presentation Layer         │
+│   Compose UI · ViewModel · UiState│
+│     · UiActions (MVI Intent)      │
+└────────────────┬──────────────────┘
+                 │
+┌────────────────▼─────────────────┐
+│          Domain Layer            │
+│   Use Cases · Models · Repository│
+│            Interfaces            │
+└────────────────┬─────────────────┘
+                 │
+┌────────────────▼─────────────────┐
+│           Data Layer             │
+│  Retrofit · DTOs · Repository    │
+│         Implementations          │
+└──────────────────────────────────┘
+```
+
+## Project Structure
+
+```
+com.emon.mycontactapp/
+│
+├── core/
+│   ├── base/                   # BaseViewModel, common base classes
+│   └── utils/                  # Extension functions, helpers
+│
+├── data/
+│   ├── common/                 # Resource wrapper (Success/Error/Loading)
+│   ├── mapper/                 # DTO → Domain model mappers
+│   ├── remote/                 # Retrofit API interface & DTOs
+│   └── repository/             # Repository implementations
+│
+├── di/
+│   └── module/                 # Hilt modules (Network, Repository)
+│
+├── domain/
+│   ├── common/                 # Shared domain utilities
+│   ├── model/                  # Domain models
+│   ├── repository/             # Repository interfaces
+│   └── usecase/                # Use cases
+│
+├── presentation/
+│   ├── MainActivity.kt
+│   ├── navigation/             # AppNavigation, Routes
+│   ├── contactlist/            # ContactListScreen, ViewModel, UiState
+│   └── contactdetails/         # ContactDetailsScreen
+│
+└── ui/
+    ├── components/             # Reusable Compose components
+    └── theme/                  # MaterialTheme, Colors, Typography
+```
+
+---
+
+## Getting Started
+
+### Requirements
+
+- Android Studio Meerkat (2024.3.1) or later
+- Kotlin 2.0+
+- Min SDK: 23
+- Target SDK: 35
+- JDK 17
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/em00n/My-Contact-App.git
+
+# Navigate to project directory
+cd My-Contact-App
+
+# Build debug APK
+./gradlew assembleDebug
+
+# Or run directly on connected device
+./gradlew installDebug
+```
+
+> **Note:** The app currently uses mock/placeholder data.
+> To connect to a real API, update the `BASE_URL` and comment out `provideMockResponseOkHttpClient`
+> also uncomment `provideOkHttpClient` in `NetworkModule.kt`.
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/add-edit-contact`)
+3. Commit your changes (`git commit -m 'Add edit contact screen'`)
+4. Push to the branch (`git push origin feature/add-edit-contact`)
+5. Open a Pull Request
+
+---
+
+## Contact
+
+- LinkedIn: [Emon](https://www.linkedin.com/in/md-emon-hosen-86b4a221b/)
+- GitHub: [@em00n](https://github.com/em00n)
