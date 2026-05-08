@@ -118,10 +118,14 @@ class NetworkBoundResourceTest {
 
             // When & Then
             networkBoundResource.performApiRequest(::apiCall).test(timeout = TestConstants.TIMEOUT_DURATION.seconds) {
-                skipItems(2) // Skip loading states
+                // First emission: Loading
+                val loading = awaitItem()
+                assertTrue("Expected Resource.Loading for error code $errorCode", loading is Resource.Loading)
+
+                // Second emission: Error with correct code
                 val error = awaitItem()
-                assertTrue(error is Resource.Error)
-                assertEquals(errorCode, (error as Resource.Error).code)
+                assertTrue("Expected Resource.Error for error code $errorCode", error is Resource.Error)
+                assertEquals("Expected error code $errorCode", errorCode, (error as Resource.Error).code)
                 awaitComplete()
             }
         }
@@ -133,7 +137,7 @@ class NetworkBoundResourceTest {
      * Verifies:
      * 1. Error state is emitted with "Unknown error" message
      * 2. Error code is set to default (0)
-     * 3. Loading states are properly managed
+     * 3. Loading state is properly managed
      */
     @Test
     fun `performApiRequest emits error for null response body`() = runTest {
@@ -143,11 +147,15 @@ class NetworkBoundResourceTest {
 
         // When & Then
         networkBoundResource.performApiRequest(::apiCall).test(timeout = TestConstants.TIMEOUT_DURATION.seconds) {
-            skipItems(2) // Skip loading states
+            // First emission: Loading
+            val loading = awaitItem()
+            assertTrue("Expected Resource.Loading", loading is Resource.Loading)
+
+            // Second emission: Error with unknown message
             val error = awaitItem()
-            assertTrue(error is Resource.Error)
-            assertEquals(TestConstants.UNKNOWN_ERROR, (error as Resource.Error).message)
-            assertEquals(TestConstants.DEFAULT_ERROR_CODE, error.code)
+            assertTrue("Expected Resource.Error", error is Resource.Error)
+            assertEquals("Expected unknown error message", TestConstants.UNKNOWN_ERROR, (error as Resource.Error).message)
+            assertEquals("Expected default error code", TestConstants.DEFAULT_ERROR_CODE, error.code)
             awaitComplete()
         }
     }
