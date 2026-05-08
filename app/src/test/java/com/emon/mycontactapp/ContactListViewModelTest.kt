@@ -34,6 +34,7 @@ class ContactListViewModelTest {
     fun setUp() {
         Dispatchers.setMain(StandardTestDispatcher()) // Set the main dispatcher for tests
         getContactListUseCase = mockk()
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Loading)
         viewModel = ContactListViewModel(getContactListUseCase)
     }
 
@@ -45,7 +46,7 @@ class ContactListViewModelTest {
     @Test
     fun fetchContactListApiLoading() = runTest {
         // Mock loading state
-        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Loading(true))
+        coEvery { getContactListUseCase.invoke() } returns flowOf(Resource.Loading)
 
         // Trigger action
         viewModel.action(ContactListUiAction.FetchContacts)

@@ -5,6 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.time.Duration.Companion.seconds
@@ -24,7 +25,7 @@ class MapperExtensionsTest {
         // When & Then
         flow.mapResponseWith(testMapper).test(timeout = 2.seconds) {
             val item = awaitItem()
-            assertTrue(item is Resource.Success)
+            assertTrue("Expected Resource.Success", item is Resource.Success)
             assertEquals(5, (item as Resource.Success).data)
             awaitComplete()
         }
@@ -33,14 +34,17 @@ class MapperExtensionsTest {
     @Test
     fun `mapResponseWith passes through Resource_Error`() = runTest {
         // Given
-        val flow = flowOf<Resource<String>>(Resource.Error("error", 404))
+        val errorMessage = "error"
+        val errorCode = 404
+        val flow = flowOf<Resource<String>>(Resource.Error(errorMessage, errorCode))
 
         // When & Then
         flow.mapResponseWith(testMapper).test(timeout = 2.seconds) {
             val item = awaitItem()
-            assertTrue(item is Resource.Error)
-            assertEquals("error", (item as Resource.Error).message)
-            assertEquals(404, (item as Resource.Error).code)
+            assertTrue("Expected Resource.Error", item is Resource.Error)
+            val errorItem = item as Resource.Error
+            assertEquals(errorMessage, errorItem.message)
+            assertEquals(errorCode, errorItem.code)
             awaitComplete()
         }
     }
@@ -48,13 +52,12 @@ class MapperExtensionsTest {
     @Test
     fun `mapResponseWith passes through Resource_Loading`() = runTest {
         // Given
-        val flow = flowOf<Resource<String>>(Resource.Loading(true))
+        val flow = flowOf<Resource<String>>(Resource.Loading)
 
         // When & Then
         flow.mapResponseWith(testMapper).test(timeout = 2.seconds) {
             val item = awaitItem()
-            assertTrue(item is Resource.Loading)
-            assertTrue((item as Resource.Loading).loading)
+            assertTrue("Expected Resource.Loading", item is Resource.Loading)
             awaitComplete()
         }
     }
@@ -63,28 +66,61 @@ class MapperExtensionsTest {
     fun `mapResponseWith handles multiple emissions correctly`() = runTest {
         // Given
         val flow = flowOf<Resource<String>>(
-            Resource.Loading(true),
+            Resource.Loading,
             Resource.Success("hello"),
-            Resource.Loading(false)
+            Resource.Loading
         )
 
         // When & Then
         flow.mapResponseWith(testMapper).test(timeout = 2.seconds) {
             // First emission: Loading
             val loading = awaitItem()
-            assertTrue(loading is Resource.Loading)
-            assertTrue((loading as Resource.Loading).loading)
+            assertTrue("Expected first Resource.Loading", loading is Resource.Loading)
 
             // Second emission: Success with mapped data
             val success = awaitItem()
-            assertTrue(success is Resource.Success)
-            assertEquals(5, (success as Resource.Success).data)
+            assertTrue("Expected Resource.Success", success is Resource.Success)
+            assertEquals("Expected mapped data length to be 5", 5, (success as Resource.Success).data)
 
-            // Third emission: Loading false
+            // Third emission: Loading
             val loadingComplete = awaitItem()
-            assertTrue(loadingComplete is Resource.Loading)
-            assertTrue(!(loadingComplete as Resource.Loading).loading)
+            assertTrue("Expected second Resource.Loading", loadingComplete is Resource.Loading)
 
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `mapResponseWith maps Success with different data type`() = runTest {
+        // Given - mapper that converts String to character count
+        val customMapper = object : Mapper<String, Int> {
+            override fun mapFromApiResponse(type: String): Int = type.length * 2
+        }
+        val flow = flowOf<Resource<String>>(Resource.Success("test"))
+
+        // When & Then
+        flow.mapResponseWith(customMapper).test(timeout = 2.seconds) {
+            val item = awaitItem()
+            assertTrue("Expected Resource.Success", item is Resource.Success)
+            assertEquals("Expected mapped data to be 8 (4*2)", 8, (item as Resource.Success).data)
+            awaitComplete()
+        }
+    }
+
+    @Test
+    fun `mapResponseWith preserves Error details through mapping`() = runTest {
+        // Given
+        val errorMessage = "Network timeout"
+        val errorCode = 503
+        val flow = flowOf<Resource<String>>(Resource.Error(errorMessage, errorCode))
+
+        // When & Then
+        flow.mapResponseWith(testMapper).test(timeout = 2.seconds) {
+            val item = awaitItem()
+            val errorItem = item as? Resource.Error
+            assertNotNull("Expected Resource.Error", errorItem)
+            assertEquals(errorMessage, errorItem?.message)
+            assertEquals(errorCode, errorItem?.code)
             awaitComplete()
         }
     }

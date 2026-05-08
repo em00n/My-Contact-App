@@ -57,9 +57,8 @@ class NetworkBoundResourceTest {
      * Tests successful API response scenario.
      *
      * Verifies:
-     * 1. Initial loading state is emitted (loading = true)
-     * 2. Loading completion is emitted (loading = false)
-     * 3. Success state contains correct data
+     * 1. Initial loading state is emitted
+     * 2. Success state contains correct data
      */
     @Test
     fun `performApiRequest emits loading and success states for successful response`() = runTest {
@@ -70,20 +69,14 @@ class NetworkBoundResourceTest {
 
         // When & Then
         networkBoundResource.performApiRequest(::apiCall).test(timeout = TestConstants.TIMEOUT_DURATION.seconds) {
-            // First emission should be Loading(true)
+            // First emission should be Loading
             val loading = awaitItem()
-            assertTrue(loading is Resource.Loading)
-            assertTrue((loading as Resource.Loading).loading)
+            assertTrue("Expected Resource.Loading", loading is Resource.Loading)
 
-            // Second emission should be Loading(false)
-            val loadingComplete = awaitItem()
-            assertTrue(loadingComplete is Resource.Loading)
-            assertTrue(!(loadingComplete as Resource.Loading).loading)
-
-            // Third emission should be Success with data
+            // Second emission should be Success with data
             val success = awaitItem()
-            assertTrue(success is Resource.Success)
-            assertEquals(mockData, (success as Resource.Success).data)
+            assertTrue("Expected Resource.Success", success is Resource.Success)
+            assertEquals("Expected success data", mockData, (success as Resource.Success).data)
 
             awaitComplete()
         }
@@ -164,7 +157,7 @@ class NetworkBoundResourceTest {
      *
      * Verifies:
      * 1. Error state contains timeout-specific message
-     * 2. Loading states are properly managed
+     * 2. Loading state is properly emitted
      * 3. Exception is properly caught and transformed
      */
     @Test
@@ -174,10 +167,14 @@ class NetworkBoundResourceTest {
 
         // When & Then
         networkBoundResource.performApiRequest(::apiCall).test(timeout = TestConstants.TIMEOUT_DURATION.seconds) {
-            skipItems(2) // Skip loading states
+            // First emission: Loading
+            val loading = awaitItem()
+            assertTrue("Expected Resource.Loading", loading is Resource.Loading)
+
+            // Second emission: Error with timeout message
             val error = awaitItem()
-            assertTrue(error is Resource.Error)
-            assertEquals(TestConstants.TIMEOUT_ERROR, (error as Resource.Error).message)
+            assertTrue("Expected Resource.Error", error is Resource.Error)
+            assertEquals("Expected timeout error message", TestConstants.TIMEOUT_ERROR, (error as Resource.Error).message)
             awaitComplete()
         }
     }
@@ -187,7 +184,7 @@ class NetworkBoundResourceTest {
      *
      * Verifies:
      * 1. Error state contains internet connection message
-     * 2. Loading states are properly managed
+     * 2. Loading state is properly emitted
      * 3. Exception is properly caught and transformed
      */
     @Test
@@ -197,10 +194,14 @@ class NetworkBoundResourceTest {
 
         // When & Then
         networkBoundResource.performApiRequest(::apiCall).test(timeout = TestConstants.TIMEOUT_DURATION.seconds) {
-            skipItems(2) // Skip loading states
+            // First emission: Loading
+            val loading = awaitItem()
+            assertTrue("Expected Resource.Loading", loading is Resource.Loading)
+
+            // Second emission: Error with internet connection message
             val error = awaitItem()
-            assertTrue(error is Resource.Error)
-            assertEquals(TestConstants.INTERNET_ERROR, (error as Resource.Error).message)
+            assertTrue("Expected Resource.Error", error is Resource.Error)
+            assertEquals("Expected internet error message", TestConstants.INTERNET_ERROR, (error as Resource.Error).message)
             awaitComplete()
         }
     }

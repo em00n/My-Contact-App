@@ -68,14 +68,13 @@ class ContactListRepositoryImplTest {
     @Test
     fun `fetchContactList emits Loading when API is loading`() = runTest {
         coEvery { networkBoundResource.performApiRequest<ContactListApiResponse>(any()) } returns flow {
-            emit(Resource.Loading(true))
+            emit(Resource.Loading)
         }
         // Mapper should not be called in loading case
 
         repository.fetchContactList().test {
             val item = awaitItem()
             assertTrue(item is Resource.Loading)
-            assertTrue((item as Resource.Loading).loading)
             awaitComplete()
         }
     }
