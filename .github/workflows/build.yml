@@ -58,16 +58,17 @@ jobs:
 
       #Run Unit Tests
       - name: Run Unit Tests
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon --stacktrace
 
       #Build APK With Gradle
       - name: Build With Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease --stacktrace
         env:
           KEYSTORE_PATH: my-release-key.jks  # Keystore file path
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          ORG_GRADLE_PROJECT_ENABLE_GRADLE_BUILD_CACHE: true
 
       #Upload APK As An Artifact
       - name: Upload APK
