@@ -9,6 +9,15 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+// Firebase (Crashlytics/Analytics) is Android-only and requires a google-services.json.
+// Apply the Google plugins only when that file is present so local/CI builds without
+// Firebase credentials (e.g. contributors, PRs) still succeed.
+val firebaseEnabled = project.file("google-services.json").exists()
+if (firebaseEnabled) {
+    apply(plugin = libs.plugins.google.services.get().pluginId)
+    apply(plugin = libs.plugins.firebase.crashlytics.get().pluginId)
+}
+
 kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -82,6 +91,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
+
+            // Firebase (Android only) — BOM aligns all Firebase artifact versions
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.firebase.crashlytics)
+            implementation(libs.firebase.analytics)
         }
 
         iosMain.dependencies {
