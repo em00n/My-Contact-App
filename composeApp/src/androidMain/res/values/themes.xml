@@ -7,8 +7,9 @@
         <item name="postSplashScreenTheme">@style/Theme.MyContactApp.Main</item>
     </style>
 
-    <!-- Main app theme — applied after splash dismisses -->
-    <style name="Theme.MyContactApp.Main" parent="Theme.Material3.DayNight.NoActionBar">
+    <!-- Main app theme — applied after splash dismisses. Uses a framework theme so no Material
+         Components dependency is needed; the actual UI colors come from Compose MaterialTheme. -->
+    <style name="Theme.MyContactApp.Main" parent="android:Theme.Material.Light.NoActionBar">
     </style>
 
 </resources>
